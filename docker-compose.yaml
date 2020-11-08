@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  encryptor:
+    build:
+      context: .
+      dockerfile: Dockerfile-encryptor
+    environment:
+      - ENCRYPTOR_KEY=1EB44385C2D64F3C7EBF25BFCD113321
+    ports:
+      - "8081:8080"
+    command: ./encryptor
+  stocks:
+    depends_on:
+      - encryptor
+    build:
+      context: .
+      dockerfile: Dockerfile-stocks
+    environment:
+      - ENCRYPTOR_HOST=http://encryptor:8080
+      - ALPHAVANTAGE_HOST=https://www.alphavantage.co
+      - ALPHAVANTAGE_KEY=demo
+    ports:
+      - "8080:8080"
+    command: ./stocks
